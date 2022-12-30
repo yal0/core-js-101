@@ -120,68 +120,69 @@ function fromJSON(proto, json) {
 
 const cssSelectorBuilder = {
   result: '',
+  orderCounter: 0,
 
   element(value) {
+    const copy = { ...this };
     this.error(1);
-    const obj = Object.create(cssSelectorBuilder);
-    obj.i = 1;
-    obj.result = this.resul + value;
-    return obj;
+    copy.orderCounter = 1;
+    copy.result = this.result + value;
+    return copy;
   },
 
   id(value) {
+    const copy = { ...this };
     this.error(2);
-    const obj = Object.create(cssSelectorBuilder);
-    obj.i = 2;
-    obj.result = `${this.result}#${value}`;
-    return obj;
+    copy.orderCounter = 2;
+    copy.result = `${this.result}#${value}`;
+    return copy;
   },
 
   class(value) {
+    const copy = { ...this };
     this.error(3);
-    const obj = Object.create(cssSelectorBuilder);
-    obj.i = 3;
-    obj.result = `${this.result}.${value}`;
-    return obj;
+    copy.orderCounter = 3;
+    copy.result = `${this.result}.${value}`;
+    return copy;
   },
 
   attr(value) {
+    const copy = { ...this };
     this.error(4);
-    const obj = Object.create(cssSelectorBuilder);
-    obj.i = 4;
-    obj.result = `${this.result}[${value}]`;
-    return obj;
+    copy.orderCounter = 4;
+    copy.result = `${this.result}[${value}]`;
+    return copy;
   },
 
   pseudoClass(value) {
+    const copy = { ...this };
     this.error(5);
-    const obj = Object.create(cssSelectorBuilder);
-    obj.i = 5;
-    obj.result = `${this.result}:${value}`;
-    return obj;
+    copy.orderCounter = 5;
+    copy.result = `${this.result}:${value}`;
+    return copy;
   },
 
   pseudoElement(value) {
+    const copy = { ...this };
     this.error(6);
-    const obj = Object.create(cssSelectorBuilder);
-    obj.i = 6;
-    obj.result = `${this.result}::${value}`;
-    return obj;
+    copy.orderCounter = 6;
+    copy.result = `${this.result}::${value}`;
+    return copy;
   },
 
   combine(selector1, combinator, selector2) {
-    const obj = Object.create(cssSelectorBuilder);
-    obj.answer = `${selector1.result} ${combinator} ${selector2.result}`;
-    return obj;
+    const copy = { ...this };
+    copy.result = `${selector1.result} ${combinator} ${selector2.result}`;
+    return copy;
   },
 
   stringify() {
     return this.result;
   },
 
-  error(newi) {
-    if (this.i > newi) throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
-    if (this.i === newi && (newi === 1 || newi === 2 || newi === 6)) throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+  error(order) {
+    if (this.orderCounter > order) throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+    if (this.orderCounter === order && (order === 1 || order === 2 || order === 6)) throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
   },
 
 };
